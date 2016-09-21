@@ -6,7 +6,7 @@ using DenisBaturin.ExpressionCalculator.OperatorDefinitions;
 
 namespace DenisBaturin.ExpressionCalculator.Tokens
 {
-    internal class Token
+    public class Token
     {
         private readonly CultureInfo _cultureInfo;
         private readonly object _value;

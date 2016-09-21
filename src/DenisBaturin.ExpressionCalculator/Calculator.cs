@@ -16,18 +16,17 @@ namespace DenisBaturin.ExpressionCalculator
 {
     public class Calculator
     {
-        private const int PromtStringLength = 30;
-        private readonly SpecialSymbolsUniqueList _specialSymbols;
-        private readonly OperatorsUniqueList _operators = new OperatorsUniqueList();
-
         // ReSharper disable once CollectionNeverUpdated.Local
         // ReSharper disable once FieldCanBeMadeReadOnly.Local
         [ImportMany(typeof (Operator))] private List<Operator> _importOperators = new List<Operator>();
-
+        private readonly OperatorsUniqueList _operators = new OperatorsUniqueList();
+        private readonly SpecialSymbolsUniqueList _specialSymbols;
+        private ResultInfo _resultInfo;
         public readonly CultureInfo CalculatorCultureInfo;
+
         public bool TraceMode { get; set; } = false;
         public bool CorrectionMode { get; set; } = true;
-
+        
         public Calculator(CultureInfo cultureInfo = null)
         {
             CalculatorCultureInfo = cultureInfo ?? CultureInfo.InvariantCulture;
@@ -90,16 +89,9 @@ namespace DenisBaturin.ExpressionCalculator
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public decimal CalculateExpression(string expression)
+        public ResultInfo CalculateExpression(string expression)
         {
-            DisplayTraceMessage("");
-            DisplayTraceMessage("<<START TRACE>>");
-            DisplayTraceMessage("Trace mode:", TraceMode.ToString());
-            DisplayTraceMessage("Correction mode:", CorrectionMode.ToString());
-            DisplayTraceMessage("CultureInfo:", CalculatorCultureInfo.EnglishName);
-            DisplayTraceMessage("List separator:", CalculatorCultureInfo.TextInfo.ListSeparator);
-            DisplayTraceMessage("Number decimal separator:", CalculatorCultureInfo.NumberFormat.NumberDecimalSeparator);
-            DisplayTraceMessage("Original expression: ", expression);
+            _resultInfo = new ResultInfo();
 
             var expressionValidateResult = StringExpressionValidator.Validate(expression,
                 _specialSymbols.Single(ss => ss.Type == SpecialSymbolType.LeftBracket),
@@ -113,7 +105,12 @@ namespace DenisBaturin.ExpressionCalculator
 
             var parser = new ExpressionParser(CalculatorCultureInfo, _specialSymbols, _operators);
             var tokens = parser.ConvertExpressionToTokens(expression);
-            tokens.DisplayAsStringAtConsole(TraceMode, "After tokenization: ".PadRight(PromtStringLength));
+
+            _resultInfo.TraceResult.Add(new TraceResultItem
+            {
+                Text = "step: tokenization",
+                Tokens = new List<Token>(tokens)
+            });
 
             tokens = CorrectionOfTokens(tokens);
             tokens = ProcessingBrackets(tokens);
@@ -121,17 +118,9 @@ namespace DenisBaturin.ExpressionCalculator
             // after correction and processing all brackets process final expression
             var result = CalculateResultFromTokensWithoutBrackets(tokens);
 
-            DisplayTraceMessage("Answer: ", result.ToString(CalculatorCultureInfo));
-            DisplayTraceMessage("<<END TRACE>>");
-            DisplayTraceMessage("");
+            _resultInfo.Answer = result;
 
-            return result;
-        }
-
-        private void DisplayTraceMessage(string message1, string message2 = "")
-        {
-            if (!TraceMode) return;
-            Console.WriteLine($"{message1}".PadRight(PromtStringLength) + $"{message2}");
+            return _resultInfo;
         }
 
         /// <summary>
@@ -160,7 +149,12 @@ namespace DenisBaturin.ExpressionCalculator
                     tokens.Insert(position, new Token(new Multiplication(), CalculatorCultureInfo));
                 }
             }
-            tokens.DisplayAsStringAtConsole(TraceMode, "After correction tokens: ".PadRight(PromtStringLength));
+
+            _resultInfo.TraceResult.Add(new TraceResultItem
+            {
+                Text = "step: correction",
+                Tokens = new List<Token>(tokens)
+            });
 
             return tokens;
         }
@@ -192,7 +186,12 @@ namespace DenisBaturin.ExpressionCalculator
                     tokens[leftBracketIndex] = new Token(resultNumber, CalculatorCultureInfo);
                 }
                 tokens.RemoveRange(leftBracketIndex + 1, rightBracketIndex - leftBracketIndex);
-                tokens.DisplayAsStringAtConsole(TraceMode, "step: processing brackets".PadRight(PromtStringLength));
+
+                _resultInfo.TraceResult.Add(new TraceResultItem
+                {
+                    Text = "step: processing brackets",
+                    Tokens = new List<Token>(tokens)
+                });
             }
             return tokens;
         }
@@ -212,8 +211,12 @@ namespace DenisBaturin.ExpressionCalculator
             foreach (var indexAndOperator in tokens.GetOperatorByPriority())
             {
                 tokens.ApplyOperatorAtIndex(indexAndOperator.Key, indexAndOperator.Value, CalculatorCultureInfo);
-                tokens.DisplayAsStringAtConsole(TraceMode,
-                    messagesDictionary[indexAndOperator.Value.Type].PadRight(PromtStringLength));
+
+                _resultInfo.TraceResult.Add(new TraceResultItem
+                {
+                    Text = messagesDictionary[indexAndOperator.Value.Type],
+                    Tokens = new List<Token>(tokens)
+                });
             }
 
             if (tokens.Count != 1)
