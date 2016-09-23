@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using NLog;
@@ -15,7 +16,7 @@ namespace DenisBaturin.ExpressionCalculator.ConsoleClient
             AppDomain.CurrentDomain.UnhandledException += ConsoleHelper.UnhandledExceptionHandler;
             ConsoleHelper.SetConsoleCtrlHandler(ConsoleHelper.ConsoleCtrlCheck, true);
 
-            AppLogger.Logger.Log(LogLevel.Trace, "Start application");
+            AppLogger.Logger.Log(LogLevel.Debug, "Start application");
 
             Console.InputEncoding = Encoding.Unicode;
             Console.OutputEncoding = Encoding.Unicode;
@@ -25,15 +26,15 @@ namespace DenisBaturin.ExpressionCalculator.ConsoleClient
             
             Console.Title = assemblyInfo.Name;
 
-            Console.WriteLine(assemblyInfo.Product);
-            Console.WriteLine($"{assemblyInfo.Name} (v. {assemblyInfo.Version})");
-            Console.WriteLine(assemblyInfo.Description);
-            Console.WriteLine("Enter the expression or special command (e.g. help).");
-            Console.WriteLine(new string('-', Console.WindowWidth));
+            AppLogger.Logger.Log(LogLevel.Info, assemblyInfo.Product);
+            AppLogger.Logger.Log(LogLevel.Info, $"{assemblyInfo.Name} (v. {assemblyInfo.Version})");
+            AppLogger.Logger.Log(LogLevel.Info, assemblyInfo.Description);
+            AppLogger.Logger.Log(LogLevel.Info, "Enter the expression or special command (e.g. help).");
+            AppLogger.Logger.Log(LogLevel.Info, new string('-', Console.WindowWidth));
 
             MainProcessing();
 
-            AppLogger.Logger.Log(LogLevel.Trace, "End application");
+            AppLogger.Logger.Log(LogLevel.Debug, "End application");
         }
 
         private static void MainProcessing()
@@ -42,9 +43,9 @@ namespace DenisBaturin.ExpressionCalculator.ConsoleClient
 
             while (true)
             {
-                Console.Write("Expression or command: ".PadRight(PromptStringLength));
+                AppLogger.Logger.Log(LogLevel.Info, "Expression or command: ".PadRight(PromptStringLength));
                 var expression = Console.ReadLine();
-                AppLogger.Logger.Log(LogLevel.Trace, $"Expression or command: {expression}");
+                AppLogger.Logger.Log(LogLevel.Debug, expression);
 
                 switch (expression?.Trim())
                 {
@@ -52,26 +53,22 @@ namespace DenisBaturin.ExpressionCalculator.ConsoleClient
                         DisplayHelp();
                         break;
                     case "list":
-                        Console.WriteLine();
                         var operators = calculator.GetOperatorsList();
-                        foreach (var @operator in operators)
-                        {
-                            Console.WriteLine(@operator);
-                        }
-                        Console.WriteLine();
+                        var operatorsList = Environment.NewLine;
+                        operatorsList = operators.Aggregate(operatorsList, (current, @operator) => current + (@operator + Environment.NewLine));
+                        operatorsList += Environment.NewLine;
+                        AppLogger.Logger.Log(LogLevel.Info, operatorsList);
                         continue;
                     case "trace":
                         calculator.TraceMode = !calculator.TraceMode;
-                        Console.WriteLine("Trace mode is " + calculator.TraceMode);
-                        Console.WriteLine();
+                        AppLogger.Logger.Log(LogLevel.Info, "Trace mode is " + calculator.TraceMode + Environment.NewLine);
                         continue;
                     case "correction":
                         calculator.CorrectionMode = !calculator.CorrectionMode;
-                        Console.WriteLine("Correction mode is " + calculator.CorrectionMode);
-                        Console.WriteLine();
+                        AppLogger.Logger.Log(LogLevel.Info, "Correction mode is " + calculator.CorrectionMode + Environment.NewLine);
                         continue;
                     case "culture":
-                        Console.Write("Type CultureInfo name: ".PadRight(PromptStringLength));
+                        AppLogger.Logger.Log(LogLevel.Info, "Type CultureInfo name: ".PadRight(PromptStringLength));
                         var ciName = Console.ReadLine();
                         if (ciName != null)
                         {
@@ -83,14 +80,14 @@ namespace DenisBaturin.ExpressionCalculator.ConsoleClient
                             catch (Exception)
                             {
                                 Console.WriteLine($"Unsupported CultureInfo: {ciName}");
-                                AppLogger.Logger.Log(LogLevel.Trace, $"Unsupported CultureInfo: {ciName}");
+                                AppLogger.Logger.Log(LogLevel.Error, $"Unsupported CultureInfo: {ciName}");
                                 continue;
                             }
-                            Console.WriteLine("Current CultureInfo:".PadRight(PromptStringLength) +
+                            AppLogger.Logger.Log(LogLevel.Info, "Current CultureInfo:".PadRight(PromptStringLength) +
                                               $"{cultureInfo.EnglishName}");
-                            Console.WriteLine("List separator:".PadRight(PromptStringLength) +
+                            AppLogger.Logger.Log(LogLevel.Info, "List separator:".PadRight(PromptStringLength) +
                                               $"{cultureInfo.TextInfo.ListSeparator}");
-                            Console.WriteLine("Number decimal separator:".PadRight(PromptStringLength) +
+                            AppLogger.Logger.Log(LogLevel.Info, "Number decimal separator:".PadRight(PromptStringLength) +
                                               $"{cultureInfo.NumberFormat.NumberDecimalSeparator}");
                             var trace = calculator.TraceMode;
                             var correction = calculator.CorrectionMode;
@@ -130,51 +127,50 @@ namespace DenisBaturin.ExpressionCalculator.ConsoleClient
                                 DisplayTraceMessage("");
                             }
 
-                            Console.WriteLine("Answer: ".PadRight(PromptStringLength) + $"{resultInfo.Answer.ToString(calculator.CalculatorCultureInfo)}");
-                            AppLogger.Logger.Log(LogLevel.Trace, $"Answer: {resultInfo.Answer.ToString(calculator.CalculatorCultureInfo)}");
+                            AppLogger.Logger.Log(LogLevel.Info, "Answer: ".PadRight(PromptStringLength) + $"{resultInfo.Answer.ToString(calculator.CalculatorCultureInfo)}");
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("Error: ".PadRight(PromptStringLength) + $"{ex.Message}");
+                            AppLogger.Logger.Log(LogLevel.Error, "Error: ".PadRight(PromptStringLength) + $"{ex.Message}");
                             Console.Beep();
-                            AppLogger.Logger.Log(LogLevel.Trace, ex);
+                            AppLogger.Logger.Log(LogLevel.Error, ex);
                         }
                         break;
                 }
 
-                Console.WriteLine(new string('-', Console.WindowWidth));
+                AppLogger.Logger.Log(LogLevel.Info, new string('-', Console.WindowWidth));
             }
         }
 
         private static void DisplayTraceMessage(string message1, string message2 = "")
         {
-            Console.WriteLine($"{message1}".PadRight(PromptStringLength) + $"{message2}");
+            AppLogger.Logger.Log(LogLevel.Trace, $"{message1}".PadRight(PromptStringLength) + $"{message2}");
         }
 
         private static void DisplayHelp()
         {
-            Console.WriteLine();
-            Console.WriteLine("Allowed commands:");
-            Console.WriteLine();
-            Console.WriteLine("help".PadRight(PromptStringLength) + "- Display this manual");
-            Console.WriteLine();
-            Console.WriteLine("list".PadRight(PromptStringLength) + "- Display list of operators");
-            Console.WriteLine();
-            Console.WriteLine("trace".PadRight(PromptStringLength) + "- sets mode of trace calculation On/Off");
-            Console.WriteLine("Display of all steps of calculating.");
-            Console.WriteLine();
-            Console.WriteLine("correction".PadRight(PromptStringLength) + "- sets mode of correction expression On/Off");
-            Console.WriteLine("Insert the multiplication operator if necessary.");
-            Console.WriteLine();
-            Console.WriteLine("culture".PadRight(PromptStringLength) + "- Setting CultureInfo");
-            Console.WriteLine("For example:");
-            Console.WriteLine("ru-RU sets CultureInfo - Russian (Russia).");
-            Console.WriteLine("Empty string sets CultureInfo - Invariant Language.");
-            Console.WriteLine("CultureInfo by default is Invariant Language (Invariant Country).");
-            Console.WriteLine("CultureInfo affects the list separator and the number decimal separator.");
-            Console.WriteLine();
-            Console.WriteLine("quit".PadRight(PromptStringLength) + "- Quit the application");
-            Console.WriteLine();
+            AppLogger.Logger.Log(LogLevel.Info, "");
+            AppLogger.Logger.Log(LogLevel.Info, "Allowed commands:");
+            AppLogger.Logger.Log(LogLevel.Info, "");
+            AppLogger.Logger.Log(LogLevel.Info, "help".PadRight(PromptStringLength) + "- Display this manual");
+            AppLogger.Logger.Log(LogLevel.Info, "");
+            AppLogger.Logger.Log(LogLevel.Info, "list".PadRight(PromptStringLength) + "- Display list of operators");
+            AppLogger.Logger.Log(LogLevel.Info, "");
+            AppLogger.Logger.Log(LogLevel.Info, "trace".PadRight(PromptStringLength) + "- sets mode of trace calculation On/Off");
+            AppLogger.Logger.Log(LogLevel.Info, "Display of all steps of calculating.");
+            AppLogger.Logger.Log(LogLevel.Info, "");
+            AppLogger.Logger.Log(LogLevel.Info, "correction".PadRight(PromptStringLength) + "- sets mode of correction expression On/Off");
+            AppLogger.Logger.Log(LogLevel.Info, "Insert the multiplication operator if necessary.");
+            AppLogger.Logger.Log(LogLevel.Info, "");
+            AppLogger.Logger.Log(LogLevel.Info, "culture".PadRight(PromptStringLength) + "- Setting CultureInfo");
+            AppLogger.Logger.Log(LogLevel.Info, "For example:");
+            AppLogger.Logger.Log(LogLevel.Info, "ru-RU sets CultureInfo - Russian (Russia).");
+            AppLogger.Logger.Log(LogLevel.Info, "Empty string sets CultureInfo - Invariant Language.");
+            AppLogger.Logger.Log(LogLevel.Info, "CultureInfo by default is Invariant Language (Invariant Country).");
+            AppLogger.Logger.Log(LogLevel.Info, "CultureInfo affects the list separator and the number decimal separator.");
+            AppLogger.Logger.Log(LogLevel.Info, "");
+            AppLogger.Logger.Log(LogLevel.Info, "quit".PadRight(PromptStringLength) + "- Quit the application");
+            AppLogger.Logger.Log(LogLevel.Info, "");
         }
     }
 }

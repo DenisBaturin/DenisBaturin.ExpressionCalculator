@@ -28,8 +28,8 @@ namespace DenisBaturin.ExpressionCalculator.ConsoleClient
 
         public static bool ConsoleCtrlCheck(CtrlTypes ctrlType)
         {
-            AppLogger.Logger.Log(LogLevel.Trace, "Application closing. ControlType: {0}", ctrlType);
-            AppLogger.Logger.Log(LogLevel.Trace, "End application");
+            AppLogger.Logger.Log(LogLevel.Debug, "Application closing. ControlType: {0}", ctrlType);
+            AppLogger.Logger.Log(LogLevel.Debug, "End application");
             return false;
         }
 
