@@ -37,6 +37,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculator.cs" />
+    <Compile Include="Operators\Boolean\GreaterThanOrEqual.cs" />
+    <Compile Include="Operators\Boolean\LessThanOrEqual.cs" />
     <Compile Include="Operators\SpecialSymbolsUniqueList.cs" />
     <Compile Include="Parsers\ITokenParser.cs" />
     <Compile Include="Parsers\NumberTokenParser.cs" />

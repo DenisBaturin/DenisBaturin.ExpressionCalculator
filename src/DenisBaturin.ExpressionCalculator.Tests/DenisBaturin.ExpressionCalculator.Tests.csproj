@@ -55,7 +55,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="CalculatorTests.cs" />
+    <Compile Include="TestsUtil.cs" />
+    <Compile Include="Tests\CalculatorTests.cs" />
     <Compile Include="RequiredOperators\Constants\ConstantWithWhitespaceAtStringView.cs" />
     <Compile Include="RequiredOperators\Custom\AdditionBinaryUnicode.cs" />
     <Compile Include="RequiredOperators\Trigonometry\Cos.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="RequiredOperators\Trigonometry\Sin.cs" />
     <Compile Include="RequiredOperators\Custom\Square.cs" />
     <Compile Include="RequiredOperators\Custom\Umnogit.cs" />
+    <Compile Include="Tests\ThrowExceptionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DenisBaturin.ExpressionCalculator.OperatorDefinitions\DenisBaturin.ExpressionCalculator.OperatorDefinitions.csproj">
