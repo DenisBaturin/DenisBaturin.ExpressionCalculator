@@ -28,19 +28,17 @@ namespace DenisBaturin.ExpressionCalculator.ConsoleClient
 
         public static bool ConsoleCtrlCheck(CtrlTypes ctrlType)
         {
-            AppLogger.Logger.Log(LogLevel.Trace, "Application closing. ControlType: {0}", ctrlType);
-            AppLogger.Logger.Log(LogLevel.Trace, "End application");
+            AppLogger.Logger.Log(LogLevel.Debug, "Application closing. ControlType: {0}", ctrlType);
+            AppLogger.Logger.Log(LogLevel.Debug, "End application");
             return false;
         }
 
         public static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
             var exception = (Exception) e.ExceptionObject;
-            Console.WriteLine();
-            Console.WriteLine("Observed unhandled exception:");
-            Console.WriteLine(exception.Message);
-            AppLogger.Logger.Log(LogLevel.Fatal, exception);
-            Console.WriteLine();
+            AppLogger.Logger.Log(LogLevel.Error,
+                Environment.NewLine + "Observed unhandled exception:" + Environment.NewLine + exception.Message);
+            AppLogger.Logger.Log(LogLevel.Fatal, exception + Environment.NewLine);
             Console.WriteLine("Press any key to quit...");
             Console.ReadKey();
             Environment.Exit(1);

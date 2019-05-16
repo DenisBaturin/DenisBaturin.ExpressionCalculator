@@ -1,6 +1,6 @@
 ﻿namespace DenisBaturin.ExpressionCalculator.Tokens
 {
-    internal enum TokenType
+    public enum TokenType
     {
         LeftBracket,
         RightBracket,

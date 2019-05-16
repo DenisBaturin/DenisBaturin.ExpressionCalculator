@@ -37,11 +37,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculator.cs" />
+    <Compile Include="Operators\Boolean\GreaterThanOrEqual.cs" />
+    <Compile Include="Operators\Boolean\LessThanOrEqual.cs" />
     <Compile Include="Operators\SpecialSymbolsUniqueList.cs" />
     <Compile Include="Parsers\ITokenParser.cs" />
     <Compile Include="Parsers\NumberTokenParser.cs" />
     <Compile Include="Parsers\OperatorTokenParser.cs" />
     <Compile Include="Parsers\SpecialSymbolTokenParser.cs" />
+    <Compile Include="ResultInfo.cs" />
     <Compile Include="StringExpressionValidator.cs" />
     <Compile Include="Operators\BaseMath\AdditionBinary.cs" />
     <Compile Include="Operators\BaseMath\AdditionUnaryPrefix.cs" />
@@ -79,6 +82,7 @@
     <Compile Include="Tokens\SpecialSymbolType.cs" />
     <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\TokenType.cs" />
+    <Compile Include="TraceResultItem.cs" />
     <Compile Include="ValidationResult.cs" />
   </ItemGroup>
   <ItemGroup>

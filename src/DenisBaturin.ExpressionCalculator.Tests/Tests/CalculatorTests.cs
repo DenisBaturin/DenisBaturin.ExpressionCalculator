@@ -4,21 +4,13 @@ using DenisBaturin.ExpressionCalculator.Tests.RequiredOperators.Constants;
 using DenisBaturin.ExpressionCalculator.Tests.RequiredOperators.Custom;
 using DenisBaturin.ExpressionCalculator.Tests.RequiredOperators.Trigonometry;
 using NUnit.Framework;
+using static DenisBaturin.ExpressionCalculator.Tests.TestsUtil;
 
-namespace DenisBaturin.ExpressionCalculator.Tests
+namespace DenisBaturin.ExpressionCalculator.Tests.Tests
 {
     [TestFixture]
     public class CalculatorTests
     {
-        /// <summary>
-        ///     Factory method to get new calculator instance
-        /// </summary>
-        /// <returns></returns>
-        private Calculator GetCalculator()
-        {
-            return new Calculator
-            {TraceMode = true};
-        }
 
         // Cases for InsertMultiplicationOperation method
         private static readonly object[] InsertMultiplicationOperationCases =
@@ -53,57 +45,21 @@ namespace DenisBaturin.ExpressionCalculator.Tests
         };
 
         [Test]
-        public void AddOperatorWithWhitespaceAtStringView_ThrowArgumentException()
-        {
-            var calculator = GetCalculator();
-
-            var exception = Assert.Catch<ArgumentException>(() 
-                => calculator.AddOperator(new ConstantWithWhitespaceAtStringView()));
-            Console.WriteLine(exception.Message);
-        }
-
-        [Test]
-        public void AddSameOperators_ThrowArgumentException()
-        {
-            var calculator = GetCalculator();
-
-            var @operator1 = new Pi();
-            var @operator2 = new Pi();
-
-            calculator.AddOperator(@operator1);
-
-            var exception = Assert.Catch<ArgumentException>(() => calculator.AddOperator(@operator2));
-            Console.WriteLine(exception.Message);
-        }
-
-        [Test]
-        public void AddSameOperatorsStringViewDifferentRegister_ThrowArgumentException()
-        {
-            var calculator = GetCalculator();
-
-            // Constant "pi" (StringView in lower case)
-            var lowerCase = new Pi();
-            // Constant "PI" (StringView in upper case)
-            var upperCase = new PiUpper();
-
-            calculator.AddOperator(lowerCase);
-
-            var exception = Assert.Catch<ArgumentException>(() => calculator.AddOperator(upperCase));
-            Console.WriteLine(exception.Message);
-        }
-
-        [Test]
         [TestCase("7+3=4+6", 1)]
         [TestCase("7+3=4+7", 0)]
         [TestCase("3+8>(9-4)", 1)]
         [TestCase("2+5>(12-1)", 0)]
         [TestCase("2+2*2<4", 0)]
         [TestCase("2+2*2<10", 1)]
+        [TestCase("2+2*2+4<=10", 1)]
+        [TestCase("2+2*2+3<=10", 1)]
+        [TestCase("2+2*2+4>=10", 1)]
+        [TestCase("2+2*2+5>=10", 1)]
         public void CalculateBooleanConditions(string expression, decimal answer)
         {
             var calculator = GetCalculator();
 
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
         }
 
@@ -118,7 +74,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests
         {
             var calculator = GetCalculator();
 
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
         }
 
@@ -134,7 +90,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests
             // Constant pi2 = 6.28318530717958647692528676655900576M
             calculator.AddOperator(new Pi2());
 
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
         }
 
@@ -143,29 +99,29 @@ namespace DenisBaturin.ExpressionCalculator.Tests
         {
             // Russian culture uses "," as a decimal separator and ";" as a list separator
             var russianCalculator = new Calculator(new CultureInfo("ru-RU"));
-            var result1 = russianCalculator.CalculateExpression("0,245 + 0,3");
+            var result1 = russianCalculator.CalculateExpression("0,245 + 0,3").Answer;
             Assert.IsTrue(result1 == 0.545M);
-            var result2 = russianCalculator.CalculateExpression("-0,245 + 0,3");
+            var result2 = russianCalculator.CalculateExpression("-0,245 + 0,3").Answer;
             Assert.IsTrue(result2 == 0.055M);
-            var result3 = russianCalculator.CalculateExpression("pow(2;3)");
+            var result3 = russianCalculator.CalculateExpression("pow(2;3)").Answer;
             Assert.IsTrue(result3 == 8M);
 
             // American culture uses "." as a decimal separator and "," as a list separator
             var americanCalculator = new Calculator(new CultureInfo("en-US"));
-            var result11 = americanCalculator.CalculateExpression("0.245 + 0.3");
+            var result11 = americanCalculator.CalculateExpression("0.245 + 0.3").Answer;
             Assert.IsTrue(result11 == 0.545M);
-            var result22 = americanCalculator.CalculateExpression("-0.245 + 0.3");
+            var result22 = americanCalculator.CalculateExpression("-0.245 + 0.3").Answer;
             Assert.IsTrue(result22 == 0.055M);
-            var result33 = americanCalculator.CalculateExpression("pow(2,3)");
+            var result33 = americanCalculator.CalculateExpression("pow(2,3)").Answer;
             Assert.IsTrue(result33 == 8M);
 
             // Invariant culture uses "." as a decimal separator and "," as a list separator
             var invariantCultureCalculator = new Calculator();
-            var result111 = invariantCultureCalculator.CalculateExpression("0.245 + 0.3");
+            var result111 = invariantCultureCalculator.CalculateExpression("0.245 + 0.3").Answer;
             Assert.IsTrue(result111 == 0.545M);
-            var result222 = invariantCultureCalculator.CalculateExpression("-0.245 + 0.3");
+            var result222 = invariantCultureCalculator.CalculateExpression("-0.245 + 0.3").Answer;
             Assert.IsTrue(result222 == 0.055M);
-            var result333 = invariantCultureCalculator.CalculateExpression("pow(2,3)");
+            var result333 = invariantCultureCalculator.CalculateExpression("pow(2,3)").Answer;
             Assert.IsTrue(result333 == 8M);
         }
 
@@ -179,7 +135,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests
         {
             var calculator = GetCalculator();
 
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
         }
 
@@ -192,7 +148,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests
             // sin
             calculator.AddOperator(new Sin());
 
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
         }
 
@@ -206,7 +162,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests
         {
             var calculator = GetCalculator();
 
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
         }
 
@@ -216,7 +172,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests
             var calculator = GetCalculator();
 
             const string expression = "( 10 + 2^3 * 3 ) + 4^3  -  ( 16 : 2  - 1 ) * 5 - 150 : 5^2";
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             const decimal expected = 57M;
             Assert.AreEqual(expected, actual, $"Expression: {expression}");
         }
@@ -233,7 +189,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests
         {
             var calculator = GetCalculator();
 
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
         }
 
@@ -243,7 +199,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests
             var calculator = GetCalculator();
 
             const string expression = "5!-4!";
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             const int expected = 96;
 
             Assert.AreEqual(expected, actual, $"Expression: {expression}");
@@ -264,7 +220,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests
             calculator.AddOperator(new Plus()); // x+y
             calculator.AddOperator(new Minus()); // x-y
 
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
         }
 
@@ -283,7 +239,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests
             // sin
             calculator.AddOperator(new Sin());
 
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(expected, actual, $"Expression: {expression} ({errorMessage})");
         }
 
@@ -295,75 +251,10 @@ namespace DenisBaturin.ExpressionCalculator.Tests
             calculator.AddOperator(new AdditionBinaryUnicode());
 
             const string expression = "3©©©©4";
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             const int expected = 7;
 
             Assert.AreEqual(expected, actual, $"Expression: {expression}");
-        }
-
-        [Test]
-        public void InvalidExpression_TrowConcreteException()
-        {
-            var calculator = GetCalculator();
-
-            // ToDo: to process all exceptions at Calculator.cs
-
-            // ReSharper disable once JoinDeclarationAndInitializer
-            Exception exception;
-
-            calculator.AddOperator(new Sin());
-
-            exception = Assert.Catch<ApplicationException>(() => calculator.CalculateExpression("?-2"));
-            Assert.IsTrue(exception.Message.Contains("Unknown token type:"));
-            Console.WriteLine(exception.Message);
-
-            exception = Assert.Catch<FormatException>(() => calculator.CalculateExpression("(-1"));
-            Assert.IsTrue(exception.Message.Contains("Wrong number or order of parentheses in the expression!"));
-            Console.WriteLine(exception.Message);
-
-            exception = Assert.Catch<FormatException>(() => calculator.CalculateExpression(""));
-            Console.WriteLine(exception.Message);
-            Assert.IsTrue(exception.Message.Contains("Expression is empty!"));
-
-            exception = Assert.Catch<FormatException>(() => calculator.CalculateExpression("."));
-            Console.WriteLine(exception.Message);
-            Assert.IsTrue(exception.Message.Contains("Wrong expression!"));
-
-            exception = Assert.Catch<FormatException>(() => calculator.CalculateExpression(","));
-            Console.WriteLine(exception.Message);
-            Assert.IsTrue(exception.Message.Contains("Wrong expression!"));
-
-            exception = Assert.Catch<FormatException>(() => calculator.CalculateExpression("()"));
-            Console.WriteLine(exception.Message);
-            Assert.IsTrue(exception.Message.Contains("Wrong expression!"));
-
-            exception = Assert.Catch<FormatException>(() => calculator.CalculateExpression("sin-1"));
-            Console.WriteLine(exception.Message);
-            Assert.IsTrue(exception.Message.Contains("Invalid operators order!"));
-
-            exception = Assert.Catch<ArgumentException>(() => calculator.CalculateExpression("sin()"));
-            Console.WriteLine(exception.Message);
-            Assert.IsTrue(exception.Message.Contains("The function sin() takes only one argument!"));
-
-            exception = Assert.Catch<ArgumentException>(() => calculator.CalculateExpression("sin(,)"));
-            Console.WriteLine(exception.Message);
-            Assert.IsTrue(exception.Message.Contains("The function sin() takes only one argument!"));
-
-            exception = Assert.Catch<ArgumentException>(() => calculator.CalculateExpression("sin(1,2,3)"));
-            Console.WriteLine(exception.Message);
-            Assert.IsTrue(exception.Message.Contains("The function sin() takes only one argument!"));
-
-            exception = Assert.Catch<FormatException>(() => calculator.CalculateExpression("1**2"));
-            Console.WriteLine(exception.Message);
-            Assert.IsTrue(exception.Message.Contains("Wrong expression!"));
-
-            exception = Assert.Catch<FormatException>(() => calculator.CalculateExpression("(1,2)"));
-            Console.WriteLine(exception.Message);
-            Assert.IsTrue(exception.Message.Contains("Wrong expression!"));
-
-            exception = Assert.Catch<FormatException>(() => calculator.CalculateExpression("pow((2,3),(2,3))"));
-            Console.WriteLine(exception.Message);
-            Assert.IsTrue(exception.Message.Contains("Wrong expression!"));
         }
 
         [Test]
@@ -376,9 +267,9 @@ namespace DenisBaturin.ExpressionCalculator.Tests
 
             // sin
             calculator.AddOperator(new Sin());
-
+            
             const string expression = "cos(32) + 3/sin(1)";
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             var expected = (decimal) Math.Cos(32D) + 3M/(decimal) Math.Sin(1D);
             Assert.AreEqual(expected, actual, $"Expression: {expression}");
         }
@@ -400,31 +291,8 @@ namespace DenisBaturin.ExpressionCalculator.Tests
         {
             var calculator = GetCalculator();
 
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
-        }
-
-        [Test]
-        [TestCase("(2)(5)")]
-        [TestCase("2 5")]
-        [TestCase("2pi")]
-        [TestCase("2sin(1)")]
-        public void WithoutCorrection(string expression)
-        {
-            var calculator = GetCalculator();
-            calculator.CorrectionMode = false;
-
-            // Constant pi = 3.14159265358979323846264338327950288
-            calculator.AddOperator(new Pi());
-            // sin
-            calculator.AddOperator(new Sin());
-
-            // ReSharper disable once JoinDeclarationAndInitializer
-            Exception exception;
-
-            exception = Assert.Catch<FormatException>(() => calculator.CalculateExpression(expression));
-            Console.WriteLine(exception.Message);
-            Assert.IsTrue(exception.Message.Contains("Wrong expression!"));
         }
 
         [Test]
@@ -438,10 +306,9 @@ namespace DenisBaturin.ExpressionCalculator.Tests
             const string expression = "PI pi Pi pI";
             const decimal expected = 97.40909103400243723644033269m;
 
-            var actual = calculator.CalculateExpression(expression);
+            var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(expected, actual, $"Expression: {expression}");
         }
-
 
     }
 }

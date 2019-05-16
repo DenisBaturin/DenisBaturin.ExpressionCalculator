@@ -1,6 +1,6 @@
 ﻿namespace DenisBaturin.ExpressionCalculator.Tokens
 {
-    internal interface ISpecialSymbol
+    public interface ISpecialSymbol
     {
         string StringView { get; }
         SpecialSymbolType Type { get; }
