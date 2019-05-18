@@ -4,6 +4,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>DenisBaturin.ExpressionCalculator</AssemblyName>
     <RootNamespace>DenisBaturin.ExpressionCalculator</RootNamespace>
+    <Version>1.1.0</Version>
+    <Authors>Denis Baturin</Authors>
+    <Description>The calculation of mathematical expressions.</Description>
+    <Copyright></Copyright>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl></RepositoryUrl>
+    <PackageTags />
   </PropertyGroup>
 
   <ItemGroup>
