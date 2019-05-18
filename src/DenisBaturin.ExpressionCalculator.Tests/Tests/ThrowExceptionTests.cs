@@ -2,7 +2,6 @@
 using DenisBaturin.ExpressionCalculator.Tests.RequiredOperators.Constants;
 using DenisBaturin.ExpressionCalculator.Tests.RequiredOperators.Trigonometry;
 using NUnit.Framework;
-using static DenisBaturin.ExpressionCalculator.Tests.TestsUtil;
 
 namespace DenisBaturin.ExpressionCalculator.Tests.Tests
 {
@@ -14,7 +13,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [Test]
         public void AddOperatorWithWhitespaceAtStringView_ThrowArgumentException()
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             var exception = Assert.Catch<ArgumentException>(()
                 => calculator.AddOperator(new ConstantWithWhitespaceAtStringView()));
@@ -24,7 +23,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [Test]
         public void AddSameOperators_ThrowArgumentException()
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             var @operator1 = new Pi();
             var @operator2 = new Pi();
@@ -38,7 +37,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [Test]
         public void AddSameOperatorsStringViewDifferentRegister_ThrowArgumentException()
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             // Constant "pi" (StringView in lower case)
             var lowerCase = new Pi();
@@ -58,7 +57,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [TestCase("2sin(1)")]
         public void WithoutCorrection_ThrowFormatException(string expression)
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
             calculator.CorrectionMode = false;
 
             // Constant pi = 3.14159265358979323846264338327950288
@@ -77,7 +76,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [Test]
         public void InvalidExpression_TrowConcreteException()
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             // ToDo: to process all exceptions at Calculator.cs
 

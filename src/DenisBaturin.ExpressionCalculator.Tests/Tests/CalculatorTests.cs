@@ -4,7 +4,6 @@ using DenisBaturin.ExpressionCalculator.Tests.RequiredOperators.Constants;
 using DenisBaturin.ExpressionCalculator.Tests.RequiredOperators.Custom;
 using DenisBaturin.ExpressionCalculator.Tests.RequiredOperators.Trigonometry;
 using NUnit.Framework;
-using static DenisBaturin.ExpressionCalculator.Tests.TestsUtil;
 
 namespace DenisBaturin.ExpressionCalculator.Tests.Tests
 {
@@ -57,7 +56,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [TestCase("2+2*2+5>=10", 1)]
         public void CalculateBooleanConditions(string expression, decimal answer)
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
@@ -72,7 +71,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [TestCase("pow(2,3)", 8)]
         public void CalculateBuiltInFunctions(string expression, decimal answer)
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
@@ -82,7 +81,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [TestCaseSource(nameof(CalculateConstantCases))]
         public void CalculateConstant(string expression, decimal answer)
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             // Constant pi = 3.14159265358979323846264338327950288M
             calculator.AddOperator(new Pi());
@@ -133,7 +132,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [TestCase("(3+2)(1+-2)(1++2)(1-+8)", 105)]
         public void CalculateLongExpressions(string expression, decimal answer)
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
@@ -143,7 +142,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [TestCaseSource(nameof(CalculateNegatiateFunctionsCases))]
         public void CalculateNegatiateExpressions(string expression, decimal answer)
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             // sin
             calculator.AddOperator(new Sin());
@@ -160,7 +159,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [TestCase("-pow(-2,-3)", 0.125)]
         public void CalculateNegativeExpressions(string expression, decimal answer)
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
@@ -169,7 +168,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [Test]
         public void CalculateOperatorsInRightOrder()
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             const string expression = "( 10 + 2^3 * 3 ) + 4^3  -  ( 16 : 2  - 1 ) * 5 - 150 : 5^2";
             var actual = calculator.CalculateExpression(expression).Answer;
@@ -187,7 +186,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [TestCase("2+3*4", 14)]
         public void CalculateSimpleExpressions(string expression, decimal answer)
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
@@ -196,7 +195,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [Test]
         public void CalculateUnaryPostfixOperator()
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             const string expression = "5!-4!";
             var actual = calculator.CalculateExpression(expression).Answer;
@@ -211,7 +210,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [TestCase("7 plus 4 razdelit 2 umnogit 4 minus 10", 5)]
         public void CalculateCustomFunctions(string expression, decimal answer)
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             calculator.AddOperator(new Square());
             calculator.AddOperator(new Cube());
@@ -228,7 +227,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [TestCaseSource(nameof(InsertMultiplicationOperationCases))]
         public void InsertMultiplicationOperation(string expression, decimal expected, string errorMessage)
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             // Constant pi = 3.14159265358979323846264338327950288
             calculator.AddOperator(new Pi());
@@ -246,7 +245,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [Test]
         public void CalculationOperatorStringViewUnicode()
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
             
             calculator.AddOperator(new AdditionBinaryUnicode());
 
@@ -260,7 +259,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [Test]
         public void Trigonometry()
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             // cos
             calculator.AddOperator(new Cos());
@@ -289,7 +288,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [TestCase("1.7*2.", 3.4)]
         public void DecimalNumbers(string expression, decimal answer)
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             var actual = calculator.CalculateExpression(expression).Answer;
             Assert.AreEqual(answer, actual, $"Expression: {expression}");
@@ -298,7 +297,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
         [Test]
         public void IgnoreCaseOperatorNames()
         {
-            var calculator = GetCalculator();
+            var calculator = TestsUtil.GetCalculator();
 
             // Constant pi = 3.14159265358979323846264338327950288
             calculator.AddOperator(new Pi());

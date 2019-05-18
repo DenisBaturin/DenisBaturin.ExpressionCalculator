@@ -1,102 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2DAB4BCF-13D1-416C-9899-570BD301CCFD}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DenisBaturin.ExpressionCalculator</RootNamespace>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>DenisBaturin.ExpressionCalculator</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <RootNamespace>DenisBaturin.ExpressionCalculator</RootNamespace>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="4.5.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Calculator.cs" />
-    <Compile Include="Operators\Boolean\GreaterThanOrEqual.cs" />
-    <Compile Include="Operators\Boolean\LessThanOrEqual.cs" />
-    <Compile Include="Operators\SpecialSymbolsUniqueList.cs" />
-    <Compile Include="Parsers\ITokenParser.cs" />
-    <Compile Include="Parsers\NumberTokenParser.cs" />
-    <Compile Include="Parsers\OperatorTokenParser.cs" />
-    <Compile Include="Parsers\SpecialSymbolTokenParser.cs" />
-    <Compile Include="ResultInfo.cs" />
-    <Compile Include="StringExpressionValidator.cs" />
-    <Compile Include="Operators\BaseMath\AdditionBinary.cs" />
-    <Compile Include="Operators\BaseMath\AdditionUnaryPrefix.cs" />
-    <Compile Include="Operators\Boolean\AreEqual.cs" />
-    <Compile Include="Operators\Functions\Ceiling.cs" />
-    <Compile Include="Operators\BaseMath\Division1.cs" />
-    <Compile Include="Operators\BaseMath\Division2.cs" />
-    <Compile Include="Operators\BaseMath\Division3.cs" />
-    <Compile Include="Operators\Functions\Exp.cs" />
-    <Compile Include="Operators\Functions\Floor.cs" />
-    <Compile Include="Operators\Boolean\LessThan.cs" />
-    <Compile Include="Operators\Functions\Log.cs" />
-    <Compile Include="Operators\Functions\Log10.cs" />
-    <Compile Include="Operators\BaseMath\Modulus.cs" />
-    <Compile Include="Operators\Required\Multiplication.cs" />
-    <Compile Include="Operators\BaseMath\Negation.cs" />
-    <Compile Include="Operators\BaseMath\Factorial.cs" />
-    <Compile Include="Operators\Boolean\GreaterThan.cs" />
-    <Compile Include="Operators\Functions\Abs.cs" />
-    <Compile Include="Operators\OperatorsUniqueList.cs" />
-    <Compile Include="Operators\Functions\Pow.cs" />
-    <Compile Include="Operators\BaseMath\Power.cs" />
-    <Compile Include="Operators\Functions\Rem.cs" />
-    <Compile Include="Operators\Functions\Root.cs" />
-    <Compile Include="Operators\Functions\Round.cs" />
-    <Compile Include="Operators\Functions\Sign.cs" />
-    <Compile Include="Operators\Functions\Sqrt.cs" />
-    <Compile Include="Operators\BaseMath\Subtraction.cs" />
-    <Compile Include="Operators\Functions\Truncate.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tokens\TokensExtensions.cs" />
-    <Compile Include="Tokens\ISpecialSymbol.cs" />
-    <Compile Include="Parsers\ExpressionParser.cs" />
-    <Compile Include="Tokens\SpecialSymbol.cs" />
-    <Compile Include="Tokens\SpecialSymbolType.cs" />
-    <Compile Include="Tokens\Token.cs" />
-    <Compile Include="Tokens\TokenType.cs" />
-    <Compile Include="TraceResultItem.cs" />
-    <Compile Include="ValidationResult.cs" />
+    <ProjectReference Include="..\DenisBaturin.ExpressionCalculator.OperatorDefinitions\DenisBaturin.ExpressionCalculator.OperatorDefinitions.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DenisBaturin.ExpressionCalculator.OperatorDefinitions\DenisBaturin.ExpressionCalculator.OperatorDefinitions.csproj">
-      <Project>{274d40be-2c1f-44db-ad5c-30d7c4b8c8e7}</Project>
-      <Name>DenisBaturin.ExpressionCalculator.OperatorDefinitions</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
