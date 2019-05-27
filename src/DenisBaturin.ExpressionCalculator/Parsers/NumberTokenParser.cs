@@ -9,8 +9,7 @@ namespace DenisBaturin.ExpressionCalculator.Parsers
         public List<Token> TryParse(string expression, CultureInfo cultureInfo)
         {
             var tokens = new List<Token>();
-            decimal number;
-            if (decimal.TryParse(expression, NumberStyles.AllowDecimalPoint, cultureInfo, out number))
+            if (decimal.TryParse(expression, NumberStyles.AllowDecimalPoint, cultureInfo, out var number))
             {
                 tokens.Add(new Token(number, cultureInfo));
             }

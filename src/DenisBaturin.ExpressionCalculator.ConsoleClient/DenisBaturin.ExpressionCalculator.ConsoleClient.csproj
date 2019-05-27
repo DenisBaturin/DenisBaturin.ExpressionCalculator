@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DenisBaturin.ExpressionCalculator.ConsoleClient</RootNamespace>
     <AssemblyName>DenisBaturin.ExpressionCalculator.ConsoleClient</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,13 +54,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Content Include="..\DenisBaturin.ExpressionCalculator.Operators.Constants\bin\Debug\DenisBaturin.ExpressionCalculator.Operators.Constants.dll">
+    <Content Include="..\DenisBaturin.ExpressionCalculator.Operators.Constants\bin\Debug\netstandard2.0\DenisBaturin.ExpressionCalculator.Operators.Constants.dll">
       <Link>Operators\DenisBaturin.ExpressionCalculator.Operators.Constants.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\DenisBaturin.ExpressionCalculator.Operators.Trigonometry\bin\Debug\DenisBaturin.ExpressionCalculator.Operators.Trigonometry.dll">
+    <Content Include="..\DenisBaturin.ExpressionCalculator.Operators.Trigonometry\bin\Debug\netstandard2.0\DenisBaturin.ExpressionCalculator.Operators.Trigonometry.dll">
       <Link>Operators\DenisBaturin.ExpressionCalculator.Operators.Trigonometry.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -71,11 +72,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DenisBaturin.ExpressionCalculator\DenisBaturin.ExpressionCalculator.csproj">
-      <Project>{2dab4bcf-13d1-416c-9899-570bd301ccfd}</Project>
+      <Project>{ed0f9cd4-ab7c-4f26-84c3-d70c8b6029cd}</Project>
       <Name>DenisBaturin.ExpressionCalculator</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
