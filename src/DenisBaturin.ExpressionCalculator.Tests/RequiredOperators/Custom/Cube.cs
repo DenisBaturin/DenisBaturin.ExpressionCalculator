@@ -14,7 +14,8 @@ namespace DenisBaturin.ExpressionCalculator.Tests.RequiredOperators.Custom
             {
                 throw new ArgumentException($"The function {StringView}() takes only one argument!");
             }
-            return args[0]*args[0]*args[0];
+
+            return args[0] * args[0] * args[0];
         };
     }
 }
