@@ -42,8 +42,6 @@ namespace DenisBaturin.ExpressionCalculator
 
         private void LoadOperators()
         {
-            AddOperator(new Multiplication()); // required operator for correction
-
             //An aggregate catalog that combines multiple catalogs
             var catalog = new AggregateCatalog();
             //Adds all the parts found in the same assembly as the Calculator class
