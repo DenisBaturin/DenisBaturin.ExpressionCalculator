@@ -14,6 +14,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.RequiredOperators.Trigonometry
             {
                 throw new ArgumentException($"The function {StringView}() takes only one argument!");
             }
+
             return (decimal) Math.Sin((double) args[0]);
         };
     }
