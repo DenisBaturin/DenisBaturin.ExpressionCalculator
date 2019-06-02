@@ -67,6 +67,11 @@ Enter the expression or special command (e.g. help).
                         AppLogger.Logger.Log(LogLevel.Info,
                             "Trace mode is " + calculator.TraceMode + Environment.NewLine);
                         continue;
+                    case "cache":
+                        calculator.CacheMode = !calculator.CacheMode;
+                        AppLogger.Logger.Log(LogLevel.Info,
+                            "Cache mode is " + calculator.CacheMode + Environment.NewLine);
+                        continue;
                     case "correction":
                         calculator.CorrectionMode = !calculator.CorrectionMode;
                         AppLogger.Logger.Log(LogLevel.Info,
@@ -111,6 +116,7 @@ Enter the expression or special command (e.g. help).
                                 LogFormattedMessage(LogLevel.Info, "");
                                 LogFormattedMessage(LogLevel.Info, "<<START TRACE>>");
                                 LogFormattedMessage(LogLevel.Info, "Trace mode:", calculator.TraceMode.ToString());
+                                LogFormattedMessage(LogLevel.Info, "Cache mode:", calculator.CacheMode.ToString());
                                 LogFormattedMessage(LogLevel.Info, "Correction mode:",
                                     calculator.CorrectionMode.ToString());
                                 LogFormattedMessage(LogLevel.Info, "CultureInfo:",
@@ -166,6 +172,9 @@ Enter the expression or special command (e.g. help).
             sb.AppendLine();
             sb.AppendLine("trace".PadRight(PromptStringLength) + "- sets mode of trace calculation On/Off");
             sb.AppendLine("Display of all steps of calculating.");
+            sb.AppendLine();
+            sb.AppendLine("cache".PadRight(PromptStringLength) + "- sets mode of use cache On/Off");
+            sb.AppendLine("Get answer of expression from cache.");
             sb.AppendLine();
             sb.AppendLine("correction".PadRight(PromptStringLength) + "- sets mode of correction expression On/Off");
             sb.AppendLine("Insert the multiplication operator if necessary.");

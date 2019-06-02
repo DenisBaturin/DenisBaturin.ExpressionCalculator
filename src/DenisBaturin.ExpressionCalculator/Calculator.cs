@@ -16,17 +16,17 @@ namespace DenisBaturin.ExpressionCalculator
 {
     public class Calculator
     {
-        // ReSharper disable once CollectionNeverUpdated.Local
-        // ReSharper disable once FieldCanBeMadeReadOnly.Local
-        [ImportMany(typeof (Operator))] private List<Operator> _importOperators = new List<Operator>();
+        [ImportMany(typeof(Operator))] private readonly List<Operator> _importOperators = new List<Operator>();
         private readonly OperatorsUniqueList _operators = new OperatorsUniqueList();
         private readonly SpecialSymbolsUniqueList _specialSymbols;
         private ResultInfo _resultInfo;
-        public readonly CultureInfo CalculatorCultureInfo;
+        private readonly Dictionary<string, decimal> _cache = new Dictionary<string, decimal>();
 
+        public readonly CultureInfo CalculatorCultureInfo;
         public bool TraceMode { get; set; } = false;
         public bool CorrectionMode { get; set; } = true;
-        
+        public bool CacheMode { get; set; } = false;
+
         public Calculator(CultureInfo cultureInfo = null)
         {
             CalculatorCultureInfo = cultureInfo ?? CultureInfo.InvariantCulture;
@@ -45,7 +45,7 @@ namespace DenisBaturin.ExpressionCalculator
             //An aggregate catalog that combines multiple catalogs
             var catalog = new AggregateCatalog();
             //Adds all the parts found in the same assembly as the Calculator class
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (Calculator).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(Calculator).Assembly));
             // Adds "Operators" catalog if exists
             var location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (location != null)
@@ -56,6 +56,7 @@ namespace DenisBaturin.ExpressionCalculator
                     catalog.Catalogs.Add(new DirectoryCatalog(operatorsDirectory));
                 }
             }
+
             //Create the CompositionContainer with the parts in the catalog
             var compositionContainer = new CompositionContainer(catalog);
             //Fill the imports of this object
@@ -91,6 +92,24 @@ namespace DenisBaturin.ExpressionCalculator
         {
             _resultInfo = new ResultInfo();
 
+            if (CacheMode)
+            {
+                if (_cache.ContainsKey(expression))
+                {
+                    var answerFromCache = _cache[expression];
+                    var tokensForCache = new List<Token>();
+                    var answerToken = new Token(answerFromCache, CalculatorCultureInfo);
+                    tokensForCache.Add(answerToken);
+                    _resultInfo.TraceResult.Add(new TraceResultItem
+                    {
+                        Text = "step: get answer from cache",
+                        Tokens = tokensForCache
+                    });
+                    _resultInfo.Answer = answerFromCache;
+                    return _resultInfo;
+                }
+            }
+
             var expressionValidateResult = StringExpressionValidator.Validate(expression,
                 _specialSymbols.Single(ss => ss.Type == SpecialSymbolType.LeftBracket),
                 _specialSymbols.Single(ss => ss.Type == SpecialSymbolType.RightBracket));
@@ -117,6 +136,11 @@ namespace DenisBaturin.ExpressionCalculator
             var result = CalculateResultFromTokensWithoutBrackets(tokens);
 
             _resultInfo.Answer = result;
+
+            if (CacheMode)
+            {
+                _cache.Add(expression, result);
+            }
 
             return _resultInfo;
         }
@@ -183,6 +207,7 @@ namespace DenisBaturin.ExpressionCalculator
                     var resultNumber = CalculateResultFromTokensWithoutBrackets(tokensBetweenBrackets);
                     tokens[leftBracketIndex] = new Token(resultNumber, CalculatorCultureInfo);
                 }
+
                 tokens.RemoveRange(leftBracketIndex + 1, rightBracketIndex - leftBracketIndex);
 
                 _resultInfo.TraceResult.Add(new TraceResultItem
@@ -191,6 +216,7 @@ namespace DenisBaturin.ExpressionCalculator
                     Tokens = new List<Token>(tokens)
                 });
             }
+
             return tokens;
         }
 
