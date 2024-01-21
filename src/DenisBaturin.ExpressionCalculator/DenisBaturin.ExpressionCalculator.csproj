@@ -1,24 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>DenisBaturin.ExpressionCalculator</AssemblyName>
     <RootNamespace>DenisBaturin.ExpressionCalculator</RootNamespace>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Authors>Denis Baturin</Authors>
     <Description>The calculation of mathematical expressions.</Description>
-    <Copyright></Copyright>
-    <PackageProjectUrl></PackageProjectUrl>
-    <RepositoryUrl></RepositoryUrl>
+    <Copyright>
+    </Copyright>
+    <PackageProjectUrl>
+    </PackageProjectUrl>
+    <RepositoryUrl>
+    </RepositoryUrl>
     <PackageTags />
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Composition" Version="4.5.0" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DenisBaturin.ExpressionCalculator.OperatorDefinitions\DenisBaturin.ExpressionCalculator.OperatorDefinitions.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />
+  </ItemGroup>
 </Project>

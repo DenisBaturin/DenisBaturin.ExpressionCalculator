@@ -1,13 +1,20 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
-using NLog;
-
-namespace DenisBaturin.ExpressionCalculator.ConsoleClient
+﻿namespace DenisBaturin.ExpressionCalculator.ConsoleClient
 {
-    public static class ConsoleHelper
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.InteropServices;
+    using NLog;
+
+    public class ConsoleHelper
     {
+        private readonly Logger _logger;
+
         public delegate bool HandlerRoutine(CtrlTypes ctrlType);
+
+        public ConsoleHelper(Logger logger)
+        {
+            _logger = logger;
+        }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum CtrlTypes
@@ -22,23 +29,23 @@ namespace DenisBaturin.ExpressionCalculator.ConsoleClient
         [DllImport("Kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool SetConsoleCtrlHandler(
-            [In] [Optional] [MarshalAs(UnmanagedType.FunctionPtr)] HandlerRoutine handler,
-            [In] [MarshalAs(UnmanagedType.Bool)] bool add
+            [In][Optional][MarshalAs(UnmanagedType.FunctionPtr)] HandlerRoutine handler,
+            [In][MarshalAs(UnmanagedType.Bool)] bool add
             );
 
-        public static bool ConsoleCtrlCheck(CtrlTypes ctrlType)
+        public bool ConsoleCtrlCheck(CtrlTypes ctrlType)
         {
-            AppLogger.Logger.Log(LogLevel.Debug, "Application closing. ControlType: {0}", ctrlType);
-            AppLogger.Logger.Log(LogLevel.Debug, "End application");
+            _logger.Log(LogLevel.Debug, "Application closing. ControlType: {0}", ctrlType);
+            _logger.Log(LogLevel.Debug, "End application");
             return false;
         }
 
-        public static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+        public void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
-            var exception = (Exception) e.ExceptionObject;
-            AppLogger.Logger.Log(LogLevel.Error,
+            var exception = (Exception)e.ExceptionObject;
+            _logger.Log(LogLevel.Error,
                 Environment.NewLine + "Observed unhandled exception:" + Environment.NewLine + exception.Message);
-            AppLogger.Logger.Log(LogLevel.Fatal, exception + Environment.NewLine);
+            _logger.Log(LogLevel.Fatal, exception + Environment.NewLine);
             Console.WriteLine("Press any key to quit...");
             Console.ReadKey();
             Environment.Exit(1);

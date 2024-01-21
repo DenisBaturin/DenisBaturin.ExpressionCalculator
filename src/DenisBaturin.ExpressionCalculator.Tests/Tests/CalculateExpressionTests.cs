@@ -38,7 +38,7 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
 
             var actualAnswer = calculator.CalculateExpression(testCase.Expression).Answer;
 
-            Assert.AreEqual(testCase.ExpectedAnswer, actualAnswer, $"Expression: {testCase.Expression}");
+            Assert.That(actualAnswer, Is.EqualTo(testCase.ExpectedAnswer),$"Expression: {testCase.Expression}");
         }
 
         public static TestCase[] CalculateBooleanConditionsTestCases =

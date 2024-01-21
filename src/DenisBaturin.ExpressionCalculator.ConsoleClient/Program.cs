@@ -1,22 +1,25 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using NLog;
-
-namespace DenisBaturin.ExpressionCalculator.ConsoleClient
+﻿namespace DenisBaturin.ExpressionCalculator.ConsoleClient
 {
+    using System;
+    using System.Globalization;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using NLog;
+
     internal class Program
     {
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private const int PromptStringLength = 30;
+        private static ConsoleHelper _consoleHelper;
 
         private static void Main()
         {
-            AppDomain.CurrentDomain.UnhandledException += ConsoleHelper.UnhandledExceptionHandler;
-            ConsoleHelper.SetConsoleCtrlHandler(ConsoleHelper.ConsoleCtrlCheck, true);
+            _consoleHelper = new ConsoleHelper(_logger);
+            AppDomain.CurrentDomain.UnhandledException += _consoleHelper.UnhandledExceptionHandler;
+            ConsoleHelper.SetConsoleCtrlHandler(_consoleHelper.ConsoleCtrlCheck, true);
 
-            AppLogger.Logger.Log(LogLevel.Debug, "Start application");
+            _logger.Log(LogLevel.Debug, "Start application");
 
             Console.InputEncoding = Encoding.Unicode;
             Console.OutputEncoding = Encoding.Unicode;
@@ -27,17 +30,16 @@ namespace DenisBaturin.ExpressionCalculator.ConsoleClient
             Console.Title = assemblyInfo.Name;
 
             var text = $@"
-{assemblyInfo.Product}
 {assemblyInfo.Name} (v. {assemblyInfo.Version})
 {assemblyInfo.Description}
 Enter the expression or special command (e.g. help).
 {new string('-', Console.WindowWidth)}";
 
-            AppLogger.Logger.Log(LogLevel.Info, text);
+            _logger.Log(LogLevel.Info, text);
 
             MainProcessing();
 
-            AppLogger.Logger.Log(LogLevel.Debug, "End application");
+            _logger.Log(LogLevel.Debug, "End application");
         }
 
         private static void MainProcessing()
@@ -60,25 +62,25 @@ Enter the expression or special command (e.g. help).
                         var operatorsList = operators.Aggregate(Environment.NewLine,
                             (current, @operator) => current + @operator + Environment.NewLine)
                                             + Environment.NewLine;
-                        AppLogger.Logger.Log(LogLevel.Info, operatorsList);
+                        _logger.Log(LogLevel.Info, operatorsList);
                         continue;
                     case "trace":
                         calculator.TraceMode = !calculator.TraceMode;
-                        AppLogger.Logger.Log(LogLevel.Info,
+                        _logger.Log(LogLevel.Info,
                             "Trace mode is " + calculator.TraceMode + Environment.NewLine);
                         continue;
                     case "cache":
                         calculator.CacheMode = !calculator.CacheMode;
-                        AppLogger.Logger.Log(LogLevel.Info,
+                        _logger.Log(LogLevel.Info,
                             "Cache mode is " + calculator.CacheMode + Environment.NewLine);
                         continue;
                     case "correction":
                         calculator.CorrectionMode = !calculator.CorrectionMode;
-                        AppLogger.Logger.Log(LogLevel.Info,
+                        _logger.Log(LogLevel.Info,
                             "Correction mode is " + calculator.CorrectionMode + Environment.NewLine);
                         continue;
                     case "culture":
-                        AppLogger.Logger.Log(LogLevel.Info, "Type CultureInfo name: ".PadRight(PromptStringLength));
+                        _logger.Log(LogLevel.Info, "Type CultureInfo name: ".PadRight(PromptStringLength));
                         var ciName = Console.ReadLine();
                         if (ciName != null)
                         {
@@ -89,7 +91,7 @@ Enter the expression or special command (e.g. help).
                             }
                             catch (Exception)
                             {
-                                AppLogger.Logger.Log(LogLevel.Info, $"Unsupported CultureInfo: {ciName}");
+                                _logger.Log(LogLevel.Info, $"Unsupported CultureInfo: {ciName}");
                                 continue;
                             }
                             LogFormattedMessage(LogLevel.Info, "Current CultureInfo:", cultureInfo.EnglishName);
@@ -143,21 +145,21 @@ Enter the expression or special command (e.g. help).
                         }
                         catch (Exception ex)
                         {
-                            AppLogger.Logger.Log(LogLevel.Info,
+                            _logger.Log(LogLevel.Info,
                                 "Error: ".PadRight(PromptStringLength) + ex.Message);
                             Console.Beep();
-                            AppLogger.Logger.Log(LogLevel.Error, ex);
+                            _logger.Log(LogLevel.Error, ex);
                         }
                         break;
                 }
 
-                AppLogger.Logger.Log(LogLevel.Info, new string('-', Console.WindowWidth));
+                _logger.Log(LogLevel.Info, new string('-', Console.WindowWidth));
             }
         }
 
         private static void LogFormattedMessage(LogLevel logLevel, string message1, string message2 = "")
         {
-            AppLogger.Logger.Log(logLevel, message1.PadRight(PromptStringLength) + message2);
+            _logger.Log(logLevel, message1.PadRight(PromptStringLength) + message2);
         }
 
         private static void DisplayHelp()
@@ -189,7 +191,7 @@ Enter the expression or special command (e.g. help).
             sb.AppendLine("quit".PadRight(PromptStringLength) + "- Quit the application");
             sb.AppendLine();
 
-            AppLogger.Logger.Log(LogLevel.Info, sb.ToString);
+            _logger.Log(LogLevel.Info, sb.ToString);
         }
     }
 }

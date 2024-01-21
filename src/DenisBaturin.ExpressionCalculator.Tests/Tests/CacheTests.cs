@@ -34,11 +34,11 @@ namespace DenisBaturin.ExpressionCalculator.Tests.Tests
 
             calculator.CacheMode = false; 
             var actualAnswer = calculator.CalculateExpression(testCase.Expression).Answer;
-            Assert.AreEqual(testCase.ExpectedAnswer, actualAnswer, $"Expression: {testCase.Expression}");
+            Assert.That(actualAnswer, Is.EqualTo(testCase.ExpectedAnswer),  $"Expression: {testCase.Expression}");
 
             calculator.CacheMode = true;
             var actualAnswerWithCacheParam = calculator.CalculateExpression(testCase.Expression).Answer;
-            Assert.AreEqual(testCase.ExpectedAnswer, actualAnswerWithCacheParam, $"Expression: {testCase.Expression}");
+            Assert.That(actualAnswerWithCacheParam, Is.EqualTo(testCase.ExpectedAnswer), $"Expression: {testCase.Expression}");
         }
     }
 }

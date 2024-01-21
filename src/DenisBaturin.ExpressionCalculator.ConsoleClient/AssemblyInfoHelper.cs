@@ -1,8 +1,8 @@
-﻿using System;
-using System.Reflection;
-
-namespace DenisBaturin.ExpressionCalculator.ConsoleClient
+﻿namespace DenisBaturin.ExpressionCalculator.ConsoleClient
 {
+    using System;
+    using System.Reflection;
+
     public class AssemblyInfoHelper
     {
         private readonly Assembly _assembly;
@@ -15,34 +15,16 @@ namespace DenisBaturin.ExpressionCalculator.ConsoleClient
         public string Name
             => _assembly.GetName().Name;
 
-        public string FullName
-            => _assembly.GetName().FullName;
-
-        public string CodeBase
-            => _assembly.CodeBase;
-
         public string Version
             => _assembly.GetName().Version.ToString();
 
-        public string Copyright
-            => ((AssemblyCopyrightAttribute) GetCustomAttribute(typeof (AssemblyCopyrightAttribute))).Copyright;
-
-        public string Company
-            => ((AssemblyCompanyAttribute) GetCustomAttribute(typeof (AssemblyCompanyAttribute))).Company;
-
         public string Description
-            => ((AssemblyDescriptionAttribute) GetCustomAttribute(typeof (AssemblyDescriptionAttribute))).Description;
-
-        public string Product
-            => ((AssemblyProductAttribute) GetCustomAttribute(typeof (AssemblyProductAttribute))).Product;
-
-        public string Title
-            => ((AssemblyTitleAttribute) GetCustomAttribute(typeof (AssemblyTitleAttribute))).Title;
+            => ((AssemblyDescriptionAttribute)GetCustomAttribute(typeof(AssemblyDescriptionAttribute))).Description;
 
         private Attribute GetCustomAttribute(Type type)
         {
             var customAttributes = _assembly.GetCustomAttributes(type, false);
-            var customAttribute = (Attribute) customAttributes[0];
+            var customAttribute = (Attribute)customAttributes[0];
             return customAttribute;
         }
     }

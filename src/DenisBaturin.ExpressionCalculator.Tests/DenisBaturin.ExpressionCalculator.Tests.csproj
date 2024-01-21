@@ -1,25 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-
+    <TargetFramework>net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
-
-    <Version>1.1.0</Version>
-
+    <Version>1.2.0</Version>
     <Authors>Denis Baturin</Authors>
-
     <Product>DenisBaturin.ExpressionCalculator</Product>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="nunit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.0" />
+    <PackageReference Include="nunit" Version="4.0.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DenisBaturin.ExpressionCalculator\DenisBaturin.ExpressionCalculator.csproj" />
   </ItemGroup>
-
 </Project>
